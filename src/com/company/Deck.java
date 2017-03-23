@@ -67,11 +67,12 @@ public class Deck {
 		for (int i = n; i > 1; i--) {
 			int ran = (int)(Math.random() * i + 1);
 			Card s = cards.get(i-1);
-			cards.remove(i-1);
 			cards.add(i-1, cards.get(ran));
-			cards.remove(ran);
+            cards.remove(i);
 			cards.add(ran, s);
+            cards.remove(ran + 1);
 		}
+		size = n;
 	}
 
 	/**
