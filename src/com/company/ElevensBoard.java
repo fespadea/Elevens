@@ -1,3 +1,5 @@
+package com.company;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -53,7 +55,13 @@ public class ElevensBoard extends Board {
 	 */
 	@Override
 	public boolean isLegal(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		if(selectedCards.size() == 2){
+				return containsPairSum11(selectedCards);
+		}
+		else if(selectedCards.size() == 3){
+			return containsJQK(selectedCards);
+		}
+		return false;
 	}
 
 	/**
@@ -66,7 +74,30 @@ public class ElevensBoard extends Board {
 	 */
 	@Override
 	public boolean anotherPlayIsPossible() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				List<Integer> test = new ArrayList<>();
+				test.add(i);
+				test.add(x);
+				if (containsPairSum11(test)){
+					return true;
+				}
+			}
+		}
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				for (int y = 0; y < BOARD_SIZE; y++) {
+					List<Integer> test = new ArrayList<>();
+					test.add(i);
+					test.add(x);
+					test.add(y);
+					if (containsJQK(test)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -78,7 +109,12 @@ public class ElevensBoard extends Board {
 	 *              contain an 11-pair; false otherwise.
 	 */
 	private boolean containsPairSum11(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		if(selectedCards.size() == 2){
+			if(cardAt(selectedCards.get(0)).pointValue() + cardAt(selectedCards.get(1)).pointValue() == 11){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -90,6 +126,11 @@ public class ElevensBoard extends Board {
 	 *              include a jack, a queen, and a king; false otherwise.
 	 */
 	private boolean containsJQK(List<Integer> selectedCards) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 9 *** */
+		if(selectedCards.size() == 3){
+			if (cardAt(selectedCards.get(0)).pointValue() + cardAt(selectedCards.get(1)).pointValue() + cardAt(selectedCards.get(2)).pointValue() == 0 && !cardAt(selectedCards.get(0)).rank().equals(cardAt(selectedCards.get(1)).rank()) && !cardAt(selectedCards.get(1)).rank().equals(cardAt(selectedCards.get(2)).rank()) && !cardAt(selectedCards.get(0)).rank().equals(cardAt(selectedCards.get(2)).rank())){
+				return true;
+			}
+		}
+		return false;
 	}
 }
