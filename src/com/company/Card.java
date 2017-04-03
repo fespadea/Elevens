@@ -1,6 +1,4 @@
-package com.company;
-
-/**
+package com.company;/**
  * Card.java
  *
  * <code>Card</code> represents a playing card.

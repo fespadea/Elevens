@@ -1,6 +1,4 @@
-package com.company;
-
-import java.util.List;
+package com.company;import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -32,12 +30,6 @@ public class ElevensBoard extends Board {
 		{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0};
 
 	/**
-	 * Flag used to control debugging print statements.
-	 */
-	private static final boolean I_AM_DEBUGGING = false;
-
-
-	/**
 	 * Creates a new <code>ElevensBoard</code> instance.
 	 */
 	 public ElevensBoard() {
@@ -55,13 +47,14 @@ public class ElevensBoard extends Board {
 	 */
 	@Override
 	public boolean isLegal(List<Integer> selectedCards) {
-		if(selectedCards.size() == 2){
-				return containsPairSum11(selectedCards);
+		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		if (selectedCards.size() == 2) {
+			return findPairSum11(selectedCards).size() > 1;
+		} else if (selectedCards.size() == 3) {
+			return findJQK(selectedCards).size() > 2;
+		} else {
+			return false;
 		}
-		else if(selectedCards.size() == 3){
-			return containsJQK(selectedCards);
-		}
-		return false;
 	}
 
 	/**
@@ -74,63 +67,98 @@ public class ElevensBoard extends Board {
 	 */
 	@Override
 	public boolean anotherPlayIsPossible() {
-		for (int i = 0; i < BOARD_SIZE; i++) {
-			for (int x = 0; x < BOARD_SIZE; x++) {
-				List<Integer> test = new ArrayList<>();
-				test.add(i);
-				test.add(x);
-				if (containsPairSum11(test)){
-					return true;
-				}
-			}
-		}
-		for (int i = 0; i < BOARD_SIZE; i++) {
-			for (int x = 0; x < BOARD_SIZE; x++) {
-				for (int y = 0; y < BOARD_SIZE; y++) {
-					List<Integer> test = new ArrayList<>();
-					test.add(i);
-					test.add(x);
-					test.add(y);
-					if (containsJQK(test)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
+		List<Integer> cIndexes = cardIndexes();
+		return findPairSum11(cIndexes).size() > 1 || findJQK(cIndexes).size() > 2;
 	}
 
 	/**
-	 * Check for an 11-pair in the selected cards.
+	 * Look for an 11-pair in the selected cards.
 	 * @param selectedCards selects a subset of this board.  It is list
 	 *                      of indexes into this board that are searched
 	 *                      to find an 11-pair.
-	 * @return true if the board entries in selectedCards
-	 *              contain an 11-pair; false otherwise.
+	 * @return a list of the indexes of an 11-pair, if an 11-pair was found;
+	 *         an empty list, if an 11-pair was not found.
 	 */
-	private boolean containsPairSum11(List<Integer> selectedCards) {
-		if(selectedCards.size() == 2){
-			if(cardAt(selectedCards.get(0)).pointValue() + cardAt(selectedCards.get(1)).pointValue() == 11){
-				return true;
+	private List<Integer> findPairSum11(List<Integer> selectedCards) {
+		/* *** TO BE CHANGED INTO findPairSum11 IN ACTIVITY 11 *** */
+		for (int sk1 = 0; sk1 < selectedCards.size(); sk1++) {
+			int k1 = selectedCards.get(sk1).intValue();
+			for (int sk2 = sk1 + 1; sk2 < selectedCards.size(); sk2++) {
+				int k2 = selectedCards.get(sk2).intValue();
+				if (cardAt(k1).pointValue() + cardAt(k2).pointValue() == 11) {
+					List<Integer> pair = new ArrayList<>();
+					pair.add(k1);
+					pair.add(k2);
+					return pair;
+				}
 			}
 		}
-		return false;
+		List<Integer> pair = new ArrayList<>();
+		return pair;
 	}
 
 	/**
-	 * Check for a JQK in the selected cards.
+	 * Look for a JQK in the selected cards.
 	 * @param selectedCards selects a subset of this board.  It is list
 	 *                      of indexes into this board that are searched
 	 *                      to find a JQK group.
-	 * @return true if the board entries in selectedCards
-	 *              include a jack, a queen, and a king; false otherwise.
+	 * @return a list of the indexes of a JQK, if a JQK was found;
+	 *         an empty list, if a JQK was not found.
 	 */
-	private boolean containsJQK(List<Integer> selectedCards) {
-		if(selectedCards.size() == 3){
-			if (cardAt(selectedCards.get(0)).pointValue() + cardAt(selectedCards.get(1)).pointValue() + cardAt(selectedCards.get(2)).pointValue() == 0 && !cardAt(selectedCards.get(0)).rank().equals(cardAt(selectedCards.get(1)).rank()) && !cardAt(selectedCards.get(1)).rank().equals(cardAt(selectedCards.get(2)).rank()) && !cardAt(selectedCards.get(0)).rank().equals(cardAt(selectedCards.get(2)).rank())){
-				return true;
+	private List<Integer> findJQK(List<Integer> selectedCards) {
+		/* *** TO BE CHANGED INTO findJQK IN ACTIVITY 11 *** */
+		boolean foundJack = false;
+		boolean foundQueen = false;
+		boolean foundKing = false;
+		List<Integer> jqk = new ArrayList<>();
+		for (Integer kObj : selectedCards) {
+			int k = kObj.intValue();
+			if (cardAt(k).rank().equals("jack")) {
+				foundJack = true;
+				jqk.add(k);
+			} else if (cardAt(k).rank().equals("queen")) {
+				foundQueen = true;
+				jqk.add(k);
+			} else if (cardAt(k).rank().equals("king")) {
+				foundKing = true;
+				jqk.add(k);
 			}
 		}
-		return false;
+		if(foundJack && foundKing && foundQueen)
+		return jqk;
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Looks for a legal play on the board.  If one is found, it plays it.
+	 * @return true if a legal play was found (and made); false othewise.
+	 */
+	public boolean playIfPossible() {
+		return playPairSum11IfPossible() || playJQKIfPossible();
+	}
+
+	/**
+	 * Looks for a pair of non-face cards whose values sum to 11.
+	 * If found, replace them with the next two cards in the deck.
+	 * The simulation of this game uses this method.
+	 * @return true if an 11-pair play was found (and made); false othewise.
+	 */
+	private boolean playPairSum11IfPossible() {
+		List<Integer> cIndexes = findPairSum11(cardIndexes());
+		replaceSelectedCards(cIndexes);
+		return cIndexes.size() > 1;
+	}
+
+	/**
+	 * Looks for a group of three face cards JQK.
+	 * If found, replace them with the next three cards in the deck.
+	 * The simulation of this game uses this method.
+	 * @return true if a JQK play was found (and made); false othewise.
+	 */
+	private boolean playJQKIfPossible() {
+		List<Integer> cIndexes = findJQK(cardIndexes());
+		replaceSelectedCards(cIndexes);
+		return cIndexes.size() > 2;
 	}
 }

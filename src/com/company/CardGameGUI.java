@@ -1,6 +1,4 @@
-package com.company;
-
-import java.awt.Point;
+package com.company;import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Font;

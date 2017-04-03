@@ -1,5 +1,4 @@
 package com.company;
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,7 +22,7 @@ public abstract class Board {
 	/**
 	 * Flag used to control debugging print statements.
 	 */
-	private static final boolean I_AM_DEBUGGING = false;
+	private static final boolean I_AM_DEBUGGING = true;
 
 	/**
 	 * Creates a new <code>Board</code> instance.
